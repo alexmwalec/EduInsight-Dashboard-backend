@@ -1,0 +1,28 @@
+{
+  "name": "eduinsight-dashboard-backend",
+  "version": "1.0.0",
+  "description": "EduInsight-dashboard backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "Node index.js "
+  },
+  "keywords": [],
+  "author": "Alex C Mwale",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.15.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexmwalec/EduInsight-Dashboard-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alexmwalec/EduInsight-Dashboard-backend/issues"
+  },
+  "homepage": "https://github.com/alexmwalec/EduInsight-Dashboard-backend#readme"
+}
