@@ -1,19 +1,30 @@
-const studentModel = require("../models/studentModel");
+const studentModel = require("../Models/studentModel");
 
-// Controller to fetch all students
-const getAllStudents = async (req, res) => {
+// Get student stats (e.g., number of boys, girls, etc.)
+const getStudentStats = async (req, res) => {
   try {
-    const students = await studentModel.getStudents();
-    res.json(students);
+    const { class_assigned } = req.query;
+
+    if (!class_assigned) {
+      return res.status(400).json({ error: "class_assigned is required" });
+    }
+
+    const stats = await studentModel.getStudentStats(class_assigned);
+    res.json(stats);
   } catch (err) {
-    console.error("Error fetching students:", err);
-    res.status(500).json({ error: "Failed to fetch students" });
+    console.error("Error fetching student stats:", err);
+    res.status(500).json({ error: "Failed to fetch student stats" });
   }
 };
 
-// Controller to add a new student
+// Add a new student
 const addStudent = async (req, res) => {
   const { name, sex, class_assigned, parent, contact } = req.body;
+
+  if (!name || !sex || !class_assigned || !parent || !contact) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
   try {
     const newStudent = await studentModel.addStudent(
       name,
@@ -29,7 +40,27 @@ const addStudent = async (req, res) => {
   }
 };
 
+// ✅ Get all students filtered by class_assigned
+const getAllStudents = async (req, res) => {
+  try {
+    const { class_assigned } = req.query;
+
+    if (!class_assigned) {
+      return res.status(400).json({ error: "class_assigned is required" });
+    }
+
+    const students = await studentModel.getStudentsByClass(class_assigned);
+
+    // Return the array directly to avoid .filter errors on frontend
+    res.json(students);
+  } catch (err) {
+    console.error("Error fetching students:", err);
+    res.status(500).json({ error: "Failed to fetch students" });
+  }
+};
+
 module.exports = {
-  getAllStudents,
+  getStudentStats,
   addStudent,
+  getAllStudents,
 };

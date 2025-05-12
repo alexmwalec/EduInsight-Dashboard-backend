@@ -1,12 +1,11 @@
 const pool = require('../db');
 
-// Get students by class
+// Fetch students by class_assigned
 const getStudentsByClass = async (req, res) => {
   const { class_assigned } = req.query;
-
   try {
     const result = await pool.query(
-      'SELECT id, name FROM students WHERE class = $1',
+      'SELECT id, name FROM students WHERE class_assigned = $1',
       [class_assigned]
     );
     res.status(200).json(result.rows);
@@ -16,7 +15,7 @@ const getStudentsByClass = async (req, res) => {
   }
 };
 
-// Save attendance
+// Record attendance
 const recordAttendance = async (req, res) => {
   const { date, class_assigned, records } = req.body;
 
@@ -27,7 +26,6 @@ const recordAttendance = async (req, res) => {
         [student_id, date, status, class_assigned]
       );
     }
-
     res.status(201).json({ message: 'Attendance recorded successfully' });
   } catch (error) {
     console.error('Attendance save error:', error.message);
