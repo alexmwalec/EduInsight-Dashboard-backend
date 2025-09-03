@@ -69,7 +69,7 @@ const signupTeacher = async (req, res) => {
       [full_name, class_assigned, subject, hashedPassword]
     );
 
-    res.status(201).json({ message: "Teacher registered successfully" });
+    res.status(201).json({ message: " " });
   } catch (error) {
     console.error("Signup error:", error.message);
     res.status(500).json({ message: "Server error" });

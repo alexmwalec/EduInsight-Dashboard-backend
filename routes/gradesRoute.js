@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { saveGrade, getGradesByClass } = require("../Controllers/gradesController");
+const gradeController = require("../Controllers/gradesController");
 
-router.post("/", saveGrade);
-router.get("/", getGradesByClass);
+// Routes
+router.post("/", gradeController.addGrade);
+router.get("/class", gradeController.getGradesByClass);
+router.delete("/", gradeController.deleteGrade);
 
 module.exports = router;

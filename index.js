@@ -3,11 +3,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-
 const authRoutes = require("./routes/authRoute");
 const studentRoutes = require("./routes/studentRoute");
 const gradeRoutes = require("./routes/gradesRoute");
-const attendanceRoutes = require("./routes/attendanceRoute"); // if attendance routes exist
+const attendanceRoutes = require("./routes/attendanceRoute"); 
 
 // Middlewares
 app.use(cors());

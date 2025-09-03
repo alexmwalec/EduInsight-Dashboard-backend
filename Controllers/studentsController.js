@@ -40,7 +40,7 @@ const addStudent = async (req, res) => {
   }
 };
 
-// ✅ Get all students filtered by class_assigned
+// Get all students filtered by class_assigned
 const getAllStudents = async (req, res) => {
   try {
     const { class_assigned } = req.query;
