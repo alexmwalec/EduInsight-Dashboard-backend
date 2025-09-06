@@ -1,74 +1,36 @@
-const gradeModel = require("../Models/gradesModel");
+const gradesModel = require("../Models/gradesModel");
 
-// Add grade
-const addGrade = async (req , res) =>{
+const addGrade = async (req, res) => {
+  const { student_name, score, subject, class_assigned, week } = req.body;
 
-   const {student_name,subject,score,class_assigned} = req.body;
-       if (!student_name||subject||score||class_assigned){
-        return res.Status(400).json({error: "All field are required"});
-       }
+  if (!student_name || !score || !subject || !class_assigned) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
 
   try {
-    const newGrade = await gradeModel.addGrade(
+    const newGrade = await gradesModel.addGrade({
       student_name,
+      score: parseFloat(score),
       subject,
-      score,
-      class_assigned
-    );
+      class_assigned,
+      week: week || 1,
+    });
     res.status(201).json(newGrade);
   } catch (err) {
-    console.error("Error adding grade:", err.message);
     res.status(400).json({ error: err.message });
   }
 };
 
-// Get all grades by class
 const getGradesByClass = async (req, res) => {
   const { class_assigned } = req.query;
-
-  if (!class_assigned) {
-    return res.status(400).json({ error: "class_assigned is required" });
-  }
+  if (!class_assigned) return res.status(400).json({ error: "class_assigned is required" });
 
   try {
-    const grades = await gradeModel.getGradesByClass(class_assigned);
+    const grades = await gradesModel.getGradesByClass(class_assigned);
     res.json(grades);
   } catch (err) {
-    console.error("Error fetching grades:", err);
     res.status(500).json({ error: "Failed to fetch grades" });
   }
 };
 
-// Delete grade
-const deleteGrade = async (req, res) => {
-  const { student_name, subject, class_assigned } = req.body;
-
-  if (!student_name || !subject || !class_assigned) {
-    return res
-      .status(400)
-      .json({ error: "student_name, subject, and class_assigned are required" });
-  }
-
-  try {
-    const deletedGrade = await gradeModel.deleteGrade(
-      student_name,
-      subject,
-      class_assigned
-    );
-
-    if (!deletedGrade) {
-      return res.status(404).json({ error: "Grade not found" });
-    }
-
-    res.json({ message: "Grade deleted successfully", deletedGrade });
-  } catch (err) {
-    console.error("Error deleting grade:", err);
-    res.status(500).json({ error: "Failed to delete grade" });
-  }
-};
-
-module.exports = {
-  addGrade,
-  getGradesByClass,
-  deleteGrade,
-};
+module.exports = { addGrade, getGradesByClass };

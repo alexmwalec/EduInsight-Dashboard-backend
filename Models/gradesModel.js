@@ -1,45 +1,31 @@
-const pool = require("../db"); // adjust path to your db connection
+const pool = require("../db"); // your pg pool
 
-// Add grade (with class validation)
-const addGrade = async (student_name, subject, score, class_assigned) => {
-  // Check if student exists in that class
-  const studentCheck = await pool.query(
-    "SELECT * FROM students WHERE name = $1 AND class_assigned = $2",
+const addGrade = async ({ student_name, score, subject, class_assigned, week }) => {
+  // Get student's sex
+  const studentRes = await pool.query(
+    "SELECT sex FROM students WHERE name=$1 AND class_assigned=$2",
     [student_name, class_assigned]
   );
 
-  if (studentCheck.rows.length === 0) {
-    throw new Error("Student does not exist in this class");
+  if (!studentRes.rows.length) {
+    throw new Error("Student does not exist in your class");
   }
 
-  const result = await pool.query(
-    `INSERT INTO grades (student_name, subject, score, class_assigned)
-     VALUES ($1, $2, $3, $4) RETURNING *`,
-    [student_name, subject, score, class_assigned]
+  const sex = studentRes.rows[0].sex;
+
+  const res = await pool.query(
+    "INSERT INTO grades (student_name, score, subject, class_assigned, week, sex) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *",
+    [student_name, score, subject, class_assigned, week, sex]
   );
-  return result.rows[0];
+  return res.rows[0];
 };
 
-// Get all grades by class
 const getGradesByClass = async (class_assigned) => {
-  const result = await pool.query(
-    "SELECT * FROM grades WHERE class_assigned = $1",
+  const res = await pool.query(
+    "SELECT * FROM grades WHERE class_assigned=$1",
     [class_assigned]
   );
-  return result.rows;
+  return res.rows;
 };
 
-// Delete grade by composite key
-const deleteGrade = async (student_name, subject, class_assigned) => {
-  const result = await pool.query(
-    "DELETE FROM grades WHERE student_name = $1 AND subject = $2 AND class_assigned = $3 RETURNING *",
-    [student_name, subject, class_assigned]
-  );
-  return result.rows[0];
-};
-
-module.exports = {
-  addGrade,
-  getGradesByClass,
-  deleteGrade,
-};
+module.exports = { addGrade, getGradesByClass };

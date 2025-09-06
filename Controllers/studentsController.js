@@ -51,7 +51,7 @@ const getAllStudents = async (req, res) => {
 
     const students = await studentModel.getStudentsByClass(class_assigned);
 
-    // Return the array directly to avoid .filter errors on frontend
+   
     res.json(students);
   } catch (err) {
     console.error("Error fetching students:", err);
